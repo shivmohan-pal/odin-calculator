@@ -1,0 +1,192 @@
+:root {}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+    position: relative;
+    margin: 0;
+}
+
+header,
+main,
+footer {
+    margin: 0;
+    padding: 1px;
+    text-align: center;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 1px solid black;
+}
+
+header h1 {
+    margin: 12px auto;
+}
+
+main .container {
+    display: flex;
+    min-height: 99.7vh;
+}
+
+.calculator {
+    background-color: rgb(224, 224, 223);
+    box-shadow: 0px 0px 10px 4px rgba(0,0,0,1);
+    display: inline-block;
+    width: 300px;
+    margin: auto;
+    padding: 16px 14px;
+    position: relative;
+}
+
+#display {
+    margin-bottom: 18px;
+    background-color: white;
+    width: inherit;
+}
+
+#display * {
+    padding: 3px 6px;
+    text-align: right;
+    margin: 3px 0 0;
+    word-wrap: break-word;
+}
+
+#equation {
+    min-height: 22px;
+    font-weight: 100;
+}
+#input-result {
+    min-height: 38px;
+}
+#keypad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: inherit;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid black;
+}
+
+footer a {
+    text-decoration: none;
+    animation: colorTransform 2s linear infinite;
+}
+
+.grid-span-2 {
+    grid-column: span 2;
+}
+
+.btn {
+    background-color: rgb(170, 170, 170);
+    border: none;
+    color: white;
+    padding: 10px;
+    font-size: 24px;
+    box-shadow: 0px 0px 0px 3px gray;
+    transition: all 0.3s ease-out;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+.btn:active {
+    box-shadow: none;
+}
+
+.ac {
+    background-color: rgb(236, 92, 8);
+    box-shadow: 0px 0px 0px 3px red;
+}
+.bs {
+    background-color: rgba(236, 92, 8,0.8);
+    box-shadow: 0px 0px 0px 3px rgb(255, 0, 0,0.6);
+}
+.operator {
+    background-color: rgb(238, 175, 59);
+    box-shadow: 0px 0px 0px 3px orange;
+}
+
+.equals {
+    background-color: rgb(215, 233, 248);
+    box-shadow: 0px 0px 0px 3px rgb(170, 207, 240);
+    color: black;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.border {
+    border: 2px solid black;
+}
+
+.border-rounded {
+    border-radius: 6px;
+}
+
+@keyframes colorTransform {
+    0% {
+        color: var(--black);
+        text-shadow: -2px 5px 2px rgb(147, 185, 6);
+    }
+
+    25% {
+        color: rgba(223, 31, 72, 0.418);
+        text-shadow: -4px 6px 2px rgb(147, 185, 6);
+    }
+
+    50% {
+        color: var(--secText-color);
+        text-shadow: -6px 7px 2px rgb(147, 185, 6);
+    }
+
+    75% {
+        color: rgb(64, 22, 177);
+        text-shadow: -8px 8px 2px rgb(147, 185, 6);
+    }
+
+    100% {
+        color: rgb(65, 36, 1);
+        text-shadow: -10px 9px 2px rgb(147, 185, 6);
+    }
+}
+
+
+@media screen and (min-width:600px){
+
+    .calculator {
+        padding: 18px;
+    }
+
+    #display * {
+        padding: 8px 12px;
+        margin: 8px 0 0;
+    }
+
+    #display {
+        margin-bottom: 24px;
+    }
+
+    #keypad {
+        gap: 16px;
+    }
+}
+@media screen and (max-height:600px){
+    .calculator {
+        padding: 12px;
+    }
+} 
