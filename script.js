@@ -6,144 +6,118 @@ const buttons = document.querySelectorAll(".btn");
 
 class Display {
   constructor() {
-    this.lastEquation = '';
+    this.equation = '';
     this.input = '0';
     this.result = 0;
   }
   updateScreen() {
-    equation.textContent = this.lastEquation;
+    equation.textContent = this.equation;
     inputResult.textContent = this.input === '0' ? this.result : this.input;
 
   }
   backSpace() {
-    let a = this.input.split('');
-    a.pop();
-    this.input = a.join('');
-    this.updateScreen();
-  }
-  reset() {
-    this.lastEquation = '';
-    this.input = '0';
-    this.result = 0;
-    this.updateScreen();
-  }
-  equalsTo() {
-    equation.textContent = `${this.lastEquation} ${this.input} =`;
-    this.result = Number(eval(this.lastEquation + this.input));
-    inputResult.textContent = this.result;
-    this.input = '0';
+    this.input = this.input.length == 1 ? '0' : this.input.slice(0, -1);
   }
 }
-class Calculator {
-  constructor() {
-    this.screen = new Display();
+
+var divide = (a, b) => a / b;
+var multiply = (a, b) => a * b;
+var add = (a, b) => a + b;
+var subtract = (a, b) => a - b;
+var remainder = (a, b) => a % b;
+
+function reset() {
+  screen.equation = '';
+  screen.input = '0';
+  screen.result = input1 = input2 = 0;
+  currentOperator = null;
+}
+
+function equals(operator, TF) {
+  if (input2) {
+    screen.result = Math.round(operations(operator, input1, input2) * 1000) / 1000; 
+    screen.equation = TF ? `${input1} ${operator} ${input2} =` : `${screen.result} ${operator}`;
+    input1 = screen.result;
+    input2 = 0;
   }
-  allClear() {
-    this.screen.reset();
-  }
-  equals() {
-    if (this.screen.input !== '0') this.screen.equalsTo();
-  }
-  add() {
-    if (!this.screen.result) {
-      this.screen.result = Number(this.screen.input);
-    } else
-      this.screen.result += Number(this.screen.input);
-    this.screen.lastEquation = `${this.screen.result} +`;
-    this.screen.updateScreen();
-    this.screen.input = '';
-  }
-  subtract() {
-    if (!this.screen.result) {
-      this.screen.result = Number(this.screen.input);
-    } else
-      this.screen.result -= Number(this.screen.input);
-    this.screen.lastEquation = `${this.screen.result} −`;
-    this.screen.updateScreen();
-    this.screen.input = '';
-  }
-  divide() {
-    if (!this.screen.result) {
-      this.screen.result = Number(this.screen.input);
-    } else
-      this.screen.result /= Number(this.screen.input);
-    this.screen.lastEquation = `${this.screen.result} ÷`;
-    this.screen.updateScreen();
-    this.screen.input = '';
-  }
-  multiply() {
-    if (!this.screen.result) {
-      this.screen.result = Number(this.screen.input);
-    } else
-      this.screen.result *= Number(this.screen.input);
-    this.screen.lastEquation = `${this.screen.result} ×`;
-    this.screen.updateScreen();
-    this.screen.input = '';
-  }
-  remainder() {
-    if (!this.screen.result) {
-      this.screen.result = Number(this.screen.input);
-    } else
-      this.screen.result = this.screen.result % Number(this.screen.input);
-    this.screen.lastEquation = `${this.screen.result} %`;
-    this.screen.updateScreen();
-    this.screen.input = '';
+  else {
+    screen.equation = `${input1} ${operator}`;
   }
 }
-function taskManager(key) {
-  let numbers = ".0123456789";
-  let k = (key === '*') ? "×" : key;
-  k = (key == "backspace") ? "⌫" : key;
-  k = (key == '-') ? "−" : key;
-  k = (key == '/') ? '÷' : key;
-  k = (key == '=' || key == 'enter') ? '=' : key;
-  switch (k) {
-    case '×': calc.multiply();
-      break;
-    case '÷': calc.divide();
-      break;
-    case '−': calc.subtract();
-      break;
-    case '+': calc.add(); console.log(k);
-      break;
-    case '%': calc.remainder();
-      break;
-    case 'AC': calc.allClear();
-      break;
-    case '⌫': calc.screen.backSpace();
-      break;
-    case '=': calc.equals();
-      break;
-    default: if (numbers.includes(k)) {
-      if (calc.screen.input == '0' || !calc.screen.input) {
-        if (k == '.') {
-          calc.screen.input = '0' + key;
-        } else calc.screen.input = key;
-        console.log(calc.screen.result);
-      } else {
-        if (k == '.') {
-          calc.screen.input += calc.screen.input.includes(".") ? '' : key;
-        } else
-          calc.screen.input += key;
-      }
-      calc.screen.updateScreen();
+
+function dotHandling(key) {
+  if (screen.input == '0' || screen.input == '') screen.input = '0';
+  screen.input += screen.input.includes(".") ? '' : key;
+}
+
+function numberHandling(key) {
+  screen.input = screen.input == '0' ? key : screen.input + key;
+  screen.result = 0;
+}
+
+function operatorConverter(key) {
+  if (key == '*') return "×";
+  if (key == "Backspace" || key == "⌫") return "⌫";
+  if (key == '-') return "−";
+  if (key == '/') return '÷';
+  if (key == '=' || key == 'Enter') return '=';
+  return key;
+}
+
+function operations(operator, a, b) {
+  screen.input = '0';
+  if (b) {
+    switch (operator) {
+      case '×': return multiply(a, b);
+      case '÷': return divide(a, b);
+      case '−': return subtract(a, b);
+      case '+': return add(a, b);
+      case '%': return remainder(a, b);
+      default: return null;
     }
-      break;
   }
 }
+
+function machine(key) {
+  let numbers = ".0123456789";
+  let operators = "÷×−+%";
+  let inputOperator = operatorConverter(key);
+  if (operators.includes(inputOperator)) {
+    operations(inputOperator, input1, input2);
+    currentOperator = inputOperator;
+    equals(currentOperator, false);
+  }
+  if (key == 'AC' || key == "Escape") reset();
+  if (operatorConverter(key) == '⌫') screen.backSpace();
+  if (operatorConverter(key) == '=' && input2) equals(currentOperator, true);
+  if (numbers.includes(key)) {
+    if (key == '.') dotHandling(key);
+    else numberHandling(key);
+  }
+  if (input1 && currentOperator) {
+    input2 = Number(screen.input);
+  }
+  else {
+    input1 = Number(screen.input);
+  }
+  screen.updateScreen();
+}
+
 // ----------------------------Execution---------------------------
 
-var calc = new Calculator();
+var input1 = 0;
+var input2 = 0;
+var currentOperator = null;
+var screen = new Display();
 
-buttons.forEach(element => {
-  element.addEventListener("click", function () {
-    taskManager(this.textContent);
+buttons.forEach(button => {
+  button.addEventListener("click", function () {
+    machine(this.textContent);
   });
 });
 
-document.addEventListener('keypress', function (e) {
-  // e.preventDefault();
-  console.log(e)
-  taskManager(e.key);
+document.addEventListener('keydown', function (e) {
+  e.preventDefault();
+  machine(e.key);
 });
 
